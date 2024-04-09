@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BASE_URL, URL_KEY } from "../utils/ApiManager";
 import ProductShow from "../Components/ProductShow";
 import axios from "axios";
 import AdminSetup from "../Components/AdminSetup";
 import TextButton from "../Components/TextButton";
 import { Link, useNavigate } from "react-router-dom";
+import { data } from "autoprefixer";
+import { UTost } from "../utils/ToastHandler";
 
 function HomePage() {
-  axios.get(BASE_URL + URL_KEY.Product, {});
+  const getProductData = async () => {
+    return await axios
+      .get(BASE_URL + URL_KEY.Product)
+      .then((data) => {
+        return data.data;
+      })
+      .catch((error) => {
+        UTost.error("Turn on server: ", error.message);
+      });
+  };
+  const data = useEffect(() => {
+    console.log("allDta", getProductData());
+  }, []);
+
   let navigate = useNavigate();
   return (
     <div className="bg-gray-500 ">
@@ -17,14 +32,13 @@ function HomePage() {
           onPress={() => navigate("/admin")}
         />
       </div>
-      {
-        // GO TO HOMEPAGE
-      }
+
       <div>
         {
           // Slide Show Here
         }
         <div className="bg-gray-500 ">
+          {}
           <ProductShow
             image="https://m.media-amazon.com/images/I/81WS1l9stUL._SX569_.jpg"
             title="PowerBank"
