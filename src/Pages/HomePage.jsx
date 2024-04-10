@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_URL, URL_KEY } from "../utils/ApiManager";
 import ProductShow from "../Components/ProductShow";
 import axios from "axios";
@@ -9,18 +9,19 @@ import { data } from "autoprefixer";
 import { UTost } from "../utils/ToastHandler";
 
 function HomePage() {
-  const getProductData = async () => {
-    return await axios
-      .get(BASE_URL + URL_KEY.Product)
-      .then((data) => {
-        return data.data;
-      })
-      .catch((error) => {
-        UTost.error("Turn on server: ", error.message);
-      });
+  const [productData, setProductData] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const responce = await axios.get(BASE_URL + URL_KEY.Product);
+      setProductData(responce);
+    } catch (error) {
+      UTost.error(error.message);
+    }
   };
-  const data = useEffect(() => {
-    console.log("allDta", getProductData());
+  useEffect(() => {
+    fetchData();
+    console.log("Data = " + JSON.stringify(productData));
   }, []);
 
   let navigate = useNavigate();
@@ -33,19 +34,22 @@ function HomePage() {
         />
       </div>
 
-      <div>
+      <div className="flex justify-center items-center">
         {
           // Slide Show Here
         }
-        <div className="bg-gray-500 ">
-          {}
-          <ProductShow
-            image="https://m.media-amazon.com/images/I/81WS1l9stUL._SX569_.jpg"
-            title="PowerBank"
-            price={1500}
-            reviews={10}
-            rating={3.7}
-          />
+        <div className="bg-gray-400 flex w-2/3 items-center  flex-wrap">
+          {productData &&
+            productData.data.map((data) => (
+              <ProductShow
+                key={data.id}
+                image={data.images[0]}
+                title={data.name}
+                price={data.price}
+                reviews={0}
+                rating={0}
+              />
+            ))}
         </div>
       </div>
     </div>

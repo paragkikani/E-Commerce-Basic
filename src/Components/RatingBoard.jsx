@@ -23,7 +23,7 @@ function RatingBoard({ rated, totalReview }) {
   };
 
   const rateWiseColor = () => {
-    if (rating > 0 && rating < 2.5) {
+    if (rating > 1 && rating < 2.5) {
       return "#FF2D00";
     } else if (rating > 2.5 && rating < 3.5) {
       return "#9aa800";
@@ -34,13 +34,22 @@ function RatingBoard({ rated, totalReview }) {
 
   return (
     <div className="flex ">
-      {rated && (
+      {rated == 0 && (
         <div
           style={{ backgroundColor: rateWiseColor() }}
           className="bg-red-500 flex rounded-md justify-center items-center"
         >
-          <h2 className="px-1 py-[3px] font-bold text-white">{rated}</h2>
-          <FaStar className="w-[20px] h-[20px] text-white pr-[5px]" />
+          {rated > 0 ? (
+            <div>
+              <h2 className="px-1 py-[3px] font-bold text-white">{rated}</h2>
+              <FaStar className="w-[20px] h-[20px] text-white pr-[5px]" />
+            </div>
+          ) : (
+            <h4 className="px-1 py-[3px] font-bold text-white">
+              {" "}
+              Newlly Launch{" "}
+            </h4>
+          )}
         </div>
       )}
       {totalReview && (
