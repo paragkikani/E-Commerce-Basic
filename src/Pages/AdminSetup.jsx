@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import InputWithLabel from "./InputWithLabel";
-import Discription from "./Discription";
-import ImageUpload from "./ImageUpload";
-import TextButton from "./TextButton";
+import InputWithLabel from "../Components/InputWithLabel";
+import Discription from "../Components/Discription";
+import ImageUpload from "../Components/ImageUpload";
+import TextButton from "../Components/TextButton";
 import uniqid from "uniqid";
 import axios from "axios";
 import { BASE_URL, URL_KEY } from "../utils/ApiManager";
@@ -17,8 +17,23 @@ function AdminSetup() {
   const [details, setDetails] = useState("");
   const [images, setImages] = useState([]);
   const [price, setPrice] = useState(0);
+  // Testing
+  const [rating, setRating] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [discount, setDiscount] = useState("No Discount");
+  const [shipping, SetShipping] = useState("");
+
   const handleClickToSubmit = (event) => {
     event.preventDefault();
+    if (
+      name.length === 0 ||
+      weight === null ||
+      details.length === 0 ||
+      images.length === 0 ||
+      price === null
+    ) {
+      UTost.error("Please Fill All Fields");
+    }
     var data = {
       id: uniqid("product_") + "_" + uniqid.time(),
       name: name,
@@ -39,12 +54,12 @@ function AdminSetup() {
       });
   };
 
-  const testing = (e) => {
-    e.preventDefault();
-    UTost.success("Hello Parag", 3000);
-  };
   const gotoHome = () => {
     navigate("/");
+  };
+  const addReview = () => {
+
+      
   };
 
   return (
@@ -68,9 +83,38 @@ function AdminSetup() {
             description="About Product in 3000 words"
             setVal={setDetails}
           />
+          <div className="flex flex-col justify-center my-5 bg-gray-100">
+            <h2 className="text-center "> -----------TESTING---------- </h2>
+            <InputWithLabel
+              title="Rating"
+              inputType="numeric"
+              setVal={setRating}
+            />
+            {
+              <div>
+
+                <InputWithLabel
+                  title="Review"
+                  inputType="Text"
+                  setVal={setReviews}
+                />
+                <TextButton title="Add Review" onPress={addReview} />
+              </div>
+            }
+            <InputWithLabel
+              title="Discount"
+              inputType="Text"
+              setVal={setDiscount}
+            />
+            <InputWithLabel
+              title="Shipping Charge"
+              inputType="Text"
+              setVal={SetShipping}
+            />
+          </div>
+
           <TextButton title="Submit" onPress={handleClickToSubmit} />
         </div>
-        <TextButton title="Testing" onPress={testing} />
       </div>
     </form>
   );

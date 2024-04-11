@@ -1,16 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import RatingBoard from "./RatingBoard";
 import { Link, useNavigate } from "react-router-dom";
 
-function ProductShow({ image, title, rating, reviews, price }) {
-  const url = "https://m.media-amazon.com/images/I/81WS1l9stUL._SX569_.jpg";
-
+function ProductShow({
+  productId,
+  image,
+  title,
+  rating,
+  reviewsCounter,
+  price,
+}) {
   const navigate = useNavigate();
 
-  const handleProductClick = (productId) => {
-    navigate("product/${productId}");
+  const handleProductClick = () => {
+    navigate("product/" + productId, { state: { productId: productId } });
   };
+
+  const shortTitle = (str) => {
+    return str.length > 35 ? str.substring(0, 32) + "..." : str;
+  };
+
   //image = url;
   return (
     <div
@@ -24,8 +34,8 @@ function ProductShow({ image, title, rating, reviews, price }) {
       />
       <div className="rounded-lg absolute bg-black w-full h-1/3 bottom-0 opacity-70 flex flex-col justify-center">
         <div className="ml-[7px] ">
-          <h1 className="text-white p-[3px]">{title}</h1>
-          <RatingBoard rated={rating} totalReview={reviews} />
+          <h1 className=" text-white p-[3px]">{shortTitle(title)}</h1>
+          <RatingBoard rated={rating} totalReview={reviewsCounter} />
           <h3 className="text-white p-[3px]">$ {price}</h3>
         </div>
       </div>

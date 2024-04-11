@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./HomePage";
-import AdminSetup from "../Components/AdminSetup";
+import AdminSetup from "./AdminSetup";
 import ProductShowPage from "./ProductShowPage";
 
 function NavBar() {
@@ -9,7 +9,7 @@ function NavBar() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element=<HomePage /> />
-        <Route path="/product" element=<ProductShowPage /> />
+        <Route path="/product/:productId" element=<ProductShowPage /> />
       </Routes>
       <Routes>
         <Route path="/admin" element=<AdminSetup /> />

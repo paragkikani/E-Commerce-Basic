@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TextButton from "./Components/TextButton";
-import AdminSetup from "./Components/AdminSetup";
+import AdminSetup from "./Pages/AdminSetup";
 import HomePage from "./Pages/HomePage";
 
 import { ToastContainer } from "react-toastify";

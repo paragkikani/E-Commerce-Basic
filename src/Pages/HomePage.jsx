@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL, URL_KEY } from "../utils/ApiManager";
 import ProductShow from "../Components/ProductShow";
 import axios from "axios";
-import AdminSetup from "../Components/AdminSetup";
+import AdminSetup from "./AdminSetup";
 import TextButton from "../Components/TextButton";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { data } from "autoprefixer";
 import { UTost } from "../utils/ToastHandler";
 
@@ -21,7 +21,6 @@ function HomePage() {
   };
   useEffect(() => {
     fetchData();
-    console.log("Data = " + JSON.stringify(productData));
   }, []);
 
   let navigate = useNavigate();
@@ -38,15 +37,16 @@ function HomePage() {
         {
           // Slide Show Here
         }
-        <div className="bg-gray-400 flex w-2/3 items-center  flex-wrap">
+        <div className=" flex mx-4 items-center flex-wrap">
           {productData &&
             productData.data.map((data) => (
               <ProductShow
+                productId={data.id}
                 key={data.id}
                 image={data.images[0]}
                 title={data.name}
                 price={data.price}
-                reviews={0}
+                reviewsCounter={0}
                 rating={0}
               />
             ))}
