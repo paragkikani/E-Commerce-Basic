@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TextButton from "./TextButton";
+import { Button, Input } from "@material-tailwind/react";
 
 function FetchImageURL({ onSubmit }) {
   const [inputURL, setInputURL] = useState("");
@@ -9,17 +9,20 @@ function FetchImageURL({ onSubmit }) {
     setInputURL("");
   };
   return (
-    <div className="flex justify-center  h-8 items-center">
-      <div className="w-full h-full  flex">
-        <input
-          placeholder="Enter Image URL"
-          className=" ring-1 ring-inset w-full ring-gray-500 mr-2"
+    <div className="flex justify-center  h-10 items-center mt-2">
+      <div className="w-full h-full font-chakra flex">
+        <Input
+          label="Enter Image URL"
           onChange={(e) => {
             setInputURL(e.target.value);
           }}
+          style={{ fontFamily: "Chakra Petch" }}
           value={inputURL}
-        ></input>
-        <TextButton title="submit" onPress={handleOnSubmit} />
+          inputMode="text"
+        />
+        <Button className="h-full font-chakra ml-1" onClick={handleOnSubmit}>
+          Submit
+        </Button>
       </div>
     </div>
   );

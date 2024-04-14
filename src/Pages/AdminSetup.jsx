@@ -1,27 +1,34 @@
 import React, { useState } from "react";
-import InputWithLabel from "../Components/InputWithLabel";
 import Discription from "../Components/Discription";
 import ImageUpload from "../Components/ImageUpload";
-import TextButton from "../Components/TextButton";
 import uniqid from "uniqid";
 import axios from "axios";
 import { BASE_URL, URL_KEY } from "../utils/ApiManager";
 import { UTost } from "../utils/ToastHandler";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@material-tailwind/react";
+import { NavbarWithSearch } from "../Components/NavbarWithSearch";
+import InputCustome from "../Components/InputCustome";
 
 function AdminSetup() {
   const navigate = useNavigate();
-
   const [name, setName] = useState("");
-  const [weight, setWeight] = useState(0);
+  const [weight, setWeight] = useState("0");
   const [details, setDetails] = useState("");
   const [images, setImages] = useState([]);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("0");
   // Testing
   const [rating, setRating] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [discount, setDiscount] = useState("No Discount");
   const [shipping, SetShipping] = useState("");
+
+  const handleReviews = (index, singleReview) => {
+    console.log("index = ", index, " : val = ", singleReview);
+    const newReview = [...reviews];
+    newReview[index] = singleReview;
+    setReviews(newReview);
+  };
 
   const handleClickToSubmit = (event) => {
     event.preventDefault();
@@ -29,11 +36,14 @@ function AdminSetup() {
       name.length === 0 ||
       weight === null ||
       details.length === 0 ||
-      images.length === 0 ||
       price === null
     ) {
       UTost.error("Please Fill All Fields");
+      return;
     }
+
+    // setReviews(reviewsPanel.map((x) => x.setVal));
+
     var data = {
       id: uniqid("product_") + "_" + uniqid.time(),
       name: name,
@@ -41,6 +51,10 @@ function AdminSetup() {
       price: price,
       details: details,
       images: images,
+      rating: rating,
+      reviews: reviews,
+      discount: discount,
+      shipping: shipping,
     };
     axios
       .post(BASE_URL + URL_KEY.Product, data)
@@ -54,29 +68,53 @@ function AdminSetup() {
       });
   };
 
-  const gotoHome = () => {
-    navigate("/");
-  };
-  const addReview = () => {
+  const [reviewsPanel, setReviewsPanel] = useState([]);
+  const addReview = (event) => {
+    event.preventDefault();
 
-      
+    setReviewsPanel((s) => [
+      ...s,
+      { title: "Review", inputType: "Text", setVal: "" },
+    ]);
+  };
+
+  const removeReview = (event) => {
+    event.preventDefault();
+    return setReviewsPanel(reviewsPanel.slice(0, -1));
   };
 
   return (
-    <form>
+    <div>
+      <div className="right-0 flex justify-end">
+        <NavbarWithSearch />
+      </div>
+
       <div className="flex items-center justify-center flex-col">
         <div className="flex justify-around">
-          <h3 className="bg-slate-400 text-center">Product Details</h3>
-          <TextButton title="Home" onPress={gotoHome} />
+          <h3 className="text-2xl mt-5 bg-slate-400 font-chakra text-center">
+            Product Details
+          </h3>
         </div>
-        <div className=" justify-center items-center w-2/3 ">
-          <InputWithLabel title="Name" inputType="email" setVal={setName} />
-          <InputWithLabel
-            title="Weight"
-            inputType="numeric"
-            setVal={setWeight}
+        <div className="font-chakra justify-center items-center w-2/3 text-black">
+          <InputCustome
+            label="Name"
+            onChange={setName}
+            className=""
+            inputMode="text"
           />
-          <InputWithLabel title="Price" inputType="Numaric" setVal={setPrice} />
+
+          <InputCustome
+            label="Weight"
+            inputMode="numeric"
+            onChange={setWeight}
+            className=""
+          />
+          <InputCustome
+            label="Price"
+            inputMode="Numeric"
+            onChange={setPrice}
+            className=""
+          />
           <ImageUpload setVal={setImages} />
           <Discription
             title="Description"
@@ -85,38 +123,63 @@ function AdminSetup() {
           />
           <div className="flex flex-col justify-center my-5 bg-gray-100">
             <h2 className="text-center "> -----------TESTING---------- </h2>
-            <InputWithLabel
-              title="Rating"
-              inputType="numeric"
-              setVal={setRating}
+            <InputCustome
+              label="Rating"
+              inputMode="numeric"
+              onChange={setRating}
+              className=""
             />
             {
-              <div>
-
-                <InputWithLabel
-                  title="Review"
-                  inputType="Text"
-                  setVal={setReviews}
-                />
-                <TextButton title="Add Review" onPress={addReview} />
+              <div className="flex flex-col justify-center">
+                <Button
+                  className="mb-2 font-chakra"
+                  color="green"
+                  onClick={addReview}
+                >
+                  Add Review
+                </Button>
+                {reviewsPanel.length > 0 && (
+                  <div>
+                    {reviewsPanel.map((review, index) => (
+                      <InputCustome
+                        label={review.title}
+                        inputMode={review.inputType}
+                        onChange={(val) => handleReviews(index, val)}
+                        className=""
+                      />
+                    ))}
+                    <Button
+                      className="w-full font-chakra mb-2"
+                      color="red"
+                      onClick={removeReview}
+                    >
+                      Remove Review
+                    </Button>
+                  </div>
+                )}
               </div>
             }
-            <InputWithLabel
-              title="Discount"
-              inputType="Text"
-              setVal={setDiscount}
+            <InputCustome
+              label="Discount"
+              inputMode="Text"
+              onChange={setDiscount}
+              className=""
             />
-            <InputWithLabel
-              title="Shipping Charge"
-              inputType="Text"
-              setVal={SetShipping}
+
+            <InputCustome
+              label="Shipping Charge"
+              inputMode="Text"
+              onChange={(e) => SetShipping(e.target.value)}
+              className=""
             />
           </div>
 
-          <TextButton title="Submit" onPress={handleClickToSubmit} />
+          <Button fullWidth onClick={handleClickToSubmit} color="blue">
+            Submit
+          </Button>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 

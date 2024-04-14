@@ -1,16 +1,17 @@
+import { Textarea } from "@material-tailwind/react";
 import React from "react";
 
 function Discription({ title, description, setVal }) {
   return (
-    <div className="flex justify-center pb-5">
+    <div className="flex justify-center pb-5 mt-2">
       <div className="w-full">
-        <label className="text-gray-500">{title}</label>
-        <textarea
+        <Textarea
+          label={title}
           className="w-full h-24 ring-1 ring-gray-500 
-          text-black placeholder-gray-500 text-1xl "
-          placeholder={description}
+          text-black placeholder-gray-500 text-1xl
+          font-chakra"
           onChange={(e) => setVal(e.target.value)}
-        ></textarea>
+        />
       </div>
     </div>
   );

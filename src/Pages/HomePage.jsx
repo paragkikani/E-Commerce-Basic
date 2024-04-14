@@ -2,19 +2,20 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL, URL_KEY } from "../utils/ApiManager";
 import ProductShow from "../Components/ProductShow";
 import axios from "axios";
-import AdminSetup from "./AdminSetup";
-import TextButton from "../Components/TextButton";
 import { useNavigate } from "react-router-dom";
-import { data } from "autoprefixer";
 import { UTost } from "../utils/ToastHandler";
+import { Button, IconButton } from "@material-tailwind/react";
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import LoginDialog from "../Dialogs/LoginDialog";
+import { NavbarWithSearch } from "../Components/NavbarWithSearch";
 
 function HomePage() {
-  const [productData, setProductData] = useState(null);
+  const [productData, setProductData] = useState([]);
 
   const fetchData = async () => {
     try {
       const responce = await axios.get(BASE_URL + URL_KEY.Product);
-      setProductData(responce);
+      setProductData(responce.data);
     } catch (error) {
       UTost.error(error.message);
     }
@@ -22,33 +23,60 @@ function HomePage() {
   useEffect(() => {
     fetchData();
   }, []);
+  const deleteTheItem = async (id) => {
+    console.log("id : ", id);
+    await axios
+      .delete(BASE_URL + URL_KEY.Product + id)
+      .then((responce) => {
+        setProductData(productData.filter((x) => x.id !== id));
+        UTost.success("Item Deleted : " + responce.data);
+      })
+      .catch((error) => {
+        UTost.error("Error : " + error);
+      });
+  };
 
-  let navigate = useNavigate();
+  const deleteItem = (event, productId) => {
+    event.preventDefault();
+    deleteTheItem(productId);
+  };
+
   return (
-    <div className="bg-gray-500 ">
-      <div className="right-0 ">
-        <TextButton
-          title="Visit Admin Panel"
-          onPress={() => navigate("/admin")}
-        />
+    <div className="bg-gray-100 ">
+      <div className="right-0 flex justify-end">
+        <NavbarWithSearch />
       </div>
 
       <div className="flex justify-center items-center">
         {
           // Slide Show Here
         }
-        <div className=" flex mx-4 items-center flex-wrap">
+        <div className=" flex mx-4 items-center flex-wrap mt-3">
           {productData &&
-            productData.data.map((data) => (
-              <ProductShow
-                productId={data.id}
-                key={data.id}
-                image={data.images[0]}
-                title={data.name}
-                price={data.price}
-                reviewsCounter={0}
-                rating={0}
-              />
+            productData.map((data) => (
+              <div key={data.id} className="flex-col">
+                <ProductShow
+                  productId={data.id}
+                  image={data.images[0]}
+                  title={data.name}
+                  price={data.price}
+                  reviewsCounter={data.reviews.length}
+                  rating={data.rating}
+                />
+                <div className="flex items-center gap-2 justify-end">
+                  <p className="text-red-500 text-lg">Testing</p>
+                  <IconButton
+                    onClick={(e) => {
+                      deleteItem(e, data.id);
+                    }}
+                    color="red"
+                    size="sm"
+                    className="mr-5"
+                  >
+                    <RiDeleteBin5Fill size={18} />
+                  </IconButton>
+                </div>
+              </div>
             ))}
         </div>
       </div>

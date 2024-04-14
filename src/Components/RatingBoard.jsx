@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa";
 function RatingBoard({ rated, totalReview }) {
   const totalStar = 5;
   const rating = rated;
-
+  console.log("rating ", rated);
   const RatingStar = () => {
     let stars = [];
     for (let i = 0; i < totalStar; i++) {
@@ -33,27 +33,28 @@ function RatingBoard({ rated, totalReview }) {
   };
 
   return (
-    <div className="flex ">
-      {rated == 0 && (
+    <div className="flex  rounded-lg items-center justify-end">
+      {totalReview && (
+        <h2 className="flex font-chakra text-blue-gray-700 font-medium mr-3">
+          ( {totalReview} Review )
+        </h2>
+      )}
+      {rated !== 0 && (
         <div
           style={{ backgroundColor: rateWiseColor() }}
           className="bg-red-500 flex rounded-md justify-center items-center"
         >
           {rated > 0 ? (
-            <div>
+            <div className="flex items-center mx-2">
               <h2 className="px-1 py-[3px] font-bold text-white">{rated}</h2>
               <FaStar className="w-[20px] h-[20px] text-white pr-[5px]" />
             </div>
           ) : (
             <h4 className="px-1 py-[3px] font-bold text-white">
-              {" "}
-              Newlly Launch{" "}
+              Newlly Launch
             </h4>
           )}
         </div>
-      )}
-      {totalReview && (
-        <h2 className="text-white ml-2 font-bold">( {totalReview} Review )</h2>
       )}
     </div>
   );
